@@ -64,15 +64,8 @@ public class UrlServiceImpl implements UrlService {
             throw new MalformedURLException("Invalid URL");
         }
 
-        AppUser user = getAuthenticatedUser();
-
         String shortUrl = generateUniqueShortUrl();
-
-        Url url = new Url();
-        url.setOriginalUrl(originalUrl);
-        url.setShortUrl(shortUrl);
-        url.setUser(user);
-        urlRepository.save(url);
+        saveUrl(originalUrl, shortUrl);
 
         return shortUrl;
     }
@@ -97,14 +90,8 @@ public class UrlServiceImpl implements UrlService {
             throw new MalformedURLException("Custom URL already exists");
         }
 
-        AppUser user = getAuthenticatedUser();
-        Url url = new Url();
-
-        url.setOriginalUrl(originalUrl);
-        url.setShortUrl(customShortUrl);
-        url.setUser(user);
-        urlRepository.save(url);
-
+        saveUrl(originalUrl, customShortUrl);
+        
         return customShortUrl;
     }
 
@@ -112,6 +99,15 @@ public class UrlServiceImpl implements UrlService {
     @Scheduled(cron = "@midnight")
     public void deleteOldUrls() {
         jdbcTemplate.update("SELECT delete_old_urls()");
+    }
+
+    private void saveUrl(String originalUrl, String shortUrl) {
+        AppUser user = getAuthenticatedUser();
+        Url url = new Url();
+        url.setOriginalUrl(originalUrl);
+        url.setShortUrl(shortUrl);
+        url.setUser(user);
+        urlRepository.save(url);
     }
 
 
