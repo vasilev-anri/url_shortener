@@ -14,4 +14,5 @@ public interface UserRepository extends CrudRepository<AppUser, Long> {
     //    Optional<AppUser> findByUsername(String username);
     @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.username = :username")
     Optional<AppUser> findByUsername(@Param("username") String username);
+    boolean existsByUsername(@Param("username") String username);
 }

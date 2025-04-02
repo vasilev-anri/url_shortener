@@ -18,7 +18,7 @@ public class AppUser {
     private int userId;
     private String username;
     private String password;
-    private boolean enabled;
+    private boolean enabled = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Url> urls;
