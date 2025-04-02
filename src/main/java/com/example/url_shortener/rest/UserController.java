@@ -7,10 +7,14 @@ import com.example.url_shortener.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -31,5 +35,12 @@ public class UserController {
         AppUser savedUser = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new AppUserDto(savedUser));
     }
+
+    @RequestMapping("/user")
+    public ResponseEntity<AppUserDto> getUserDetailsAfterLogin(Authentication authentication) {
+        Optional<AppUser> user = userRepository.findByUsername(authentication.getName());
+        return user.map(appUser -> ResponseEntity.ok(new AppUserDto(appUser))).orElse(ResponseEntity.notFound().build());
+    }
+
 
 }
