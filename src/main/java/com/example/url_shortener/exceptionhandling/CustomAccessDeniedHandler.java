@@ -27,10 +27,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        String message = (accessDeniedException != null && accessDeniedException.getMessage() != null) ? accessDeniedException.getMessage() : "Authorization failed";
         String path = request.getRequestURI();
         String currentTimeStamp = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
 
-
+        response.setHeader("error-reason", "Authorization failed");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json; charset=utf-8");
 
@@ -38,8 +39,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         errorResponse.put("timestamp", currentTimeStamp);
         errorResponse.put("status", HttpStatus.FORBIDDEN.value());
-        errorResponse.put("error", HttpStatus.FORBIDDEN.getReasonPhrase() + " - " + accessDeniedException.getMessage());
-        errorResponse.put("message", "PREMIUM Role Required To Create Custom Short URLs");
+        errorResponse.put("error", HttpStatus.FORBIDDEN.getReasonPhrase());
+        errorResponse.put("message", message);
         errorResponse.put("path", path);
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
