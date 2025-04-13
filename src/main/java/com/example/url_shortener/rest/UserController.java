@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserRepository userRepository;
@@ -72,10 +75,30 @@ public class UserController {
                                             """
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                                "title": "Validation Failed",
+                                                "errors": {
+                                                    "password": "Maximum password length: 120 characters",
+                                                    "username": "Username must be 6-56 characters long"
+                                                },
+                                                "status": 400,
+                                                "timestamp": "timestamp"
+                                            }
+                                            """
+                            )
+                    )
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<AppUserDto> registerUser(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<AppUserDto> registerUser(@Valid @RequestBody UserRegisterRequest request) {
         AppUser user = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new AppUserDto(user));
     }
