@@ -4,6 +4,7 @@ import com.example.url_shortener.dto.CustomUrlRequest;
 import com.example.url_shortener.dto.ShortUrlResponse;
 import com.example.url_shortener.dto.UrlMapper;
 import com.example.url_shortener.dto.UrlResponse;
+import com.example.url_shortener.entity.Url;
 import com.example.url_shortener.exceptionhandling.ShortUrlNotFoundException;
 import com.example.url_shortener.repository.UrlRepository;
 import com.example.url_shortener.service.UrlService;
@@ -168,11 +169,8 @@ public class UrlRestController {
     })
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Object> redirectToOriginalUrl(@PathVariable String shortUrl) {
-        return urlRepository.findByShortUrl(shortUrl).map(url -> {
-            url.setAccessCount(url.getAccessCount() + 1);
-            urlRepository.save(url);
-            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url.getOriginalUrl())).build();
-        }).orElseThrow(() -> new ShortUrlNotFoundException(shortUrl));
+        Url url = urlService.incrementAccessCount(shortUrl);
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url.getOriginalUrl())).build();
     }
 
     @Operation(

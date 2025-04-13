@@ -3,6 +3,7 @@ package com.example.url_shortener.service;
 import com.example.url_shortener.entity.Url;
 import com.example.url_shortener.entity.AppUser;
 import com.example.url_shortener.exceptionhandling.CustomShortUrlAlreadyExistsException;
+import com.example.url_shortener.exceptionhandling.ShortUrlNotFoundException;
 import com.example.url_shortener.repository.UrlRepository;
 import com.example.url_shortener.repository.UserRepository;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -94,6 +95,13 @@ public class UrlServiceImpl implements UrlService {
         saveUrl(originalUrl, customShortUrl);
         
         return customShortUrl;
+    }
+
+    @Override
+    public Url incrementAccessCount(String shortUrl) {
+        Url url = urlRepository.findByShortUrl(shortUrl).orElseThrow(() -> new ShortUrlNotFoundException(shortUrl));
+        url.setAccessCount(url.getAccessCount() + 1);
+        return urlRepository.save(url);
     }
 
     @Override

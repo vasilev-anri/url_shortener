@@ -16,6 +16,7 @@ public interface UrlService {
     String generateShortUrl(String originalUrl) throws MalformedURLException;
     String generateCustomShortUrl(String originalUrl, String customShortUrl) throws MalformedURLException;
     void deleteOldUrls();
+    Url incrementAccessCount(String shorUrl);
 
 
 }
