@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AppUserDto(savedUser));
     }
 
-    @RequestMapping("/user")
+    @PostMapping("/user")
     public ResponseEntity<AppUserDto> getUserDetailsAfterLogin(Authentication authentication) {
         Optional<AppUser> user = userRepository.findByUsername(authentication.getName());
         return user.map(appUser -> ResponseEntity.ok(new AppUserDto(appUser))).orElse(ResponseEntity.notFound().build());

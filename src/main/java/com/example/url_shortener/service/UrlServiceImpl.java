@@ -2,6 +2,7 @@ package com.example.url_shortener.service;
 
 import com.example.url_shortener.entity.Url;
 import com.example.url_shortener.entity.AppUser;
+import com.example.url_shortener.exceptionhandling.CustomShortUrlAlreadyExistsException;
 import com.example.url_shortener.repository.UrlRepository;
 import com.example.url_shortener.repository.UserRepository;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -87,7 +88,7 @@ public class UrlServiceImpl implements UrlService {
         }
 
         if (urlRepository.findByShortUrl(customShortUrl).isPresent()) {
-            throw new MalformedURLException("Custom URL already exists");
+            throw new CustomShortUrlAlreadyExistsException(String.format("Custom URL '%s' already exists", customShortUrl));
         }
 
         saveUrl(originalUrl, customShortUrl);

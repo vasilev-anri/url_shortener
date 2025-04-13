@@ -47,9 +47,12 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/api/{shortUrl}", "/register").permitAll()
                         .requestMatchers("/user").authenticated()
                         .requestMatchers("/token").authenticated()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
         );
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
         http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
+        http.formLogin(Customizer.withDefaults());
         http.exceptionHandling(ehc -> ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
     }
