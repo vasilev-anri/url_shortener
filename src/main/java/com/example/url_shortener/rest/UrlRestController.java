@@ -131,8 +131,8 @@ public class UrlRestController {
             )
     })
     @PostMapping("/shorten")
-    public String shorten(@RequestBody String url) throws MalformedURLException {
-        return urlService.generateShortUrl(url);
+    public ResponseEntity<ShortUrlResponse> shorten(@RequestBody String url) throws MalformedURLException {
+        return ResponseEntity.ok(new ShortUrlResponse(urlService.generateShortUrl(url)));
     }
 
     @Operation(
@@ -209,6 +209,24 @@ public class UrlRestController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "Access to the resource is prohibited",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                                "path": "/api/shorten/custom",
+                                                "error": "Forbidden",
+                                                "message": "Access Denied | User 'string' does not have PREMIUM Role",
+                                                "timestamp": "timestamp",
+                                                "status": 403
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "Such custom URL already exists",
                     content = @Content(
@@ -219,7 +237,7 @@ public class UrlRestController {
                                                 "type": "about:blank",
                                                 "title": "Duplicate ShortUrl",
                                                 "status": 409,
-                                                "detail": "Custom short url 'Custom URL 'string' already exists' already exists",
+                                                "detail": "Custom short url 'string' already exists",
                                                 "instance": "/api/shorten/custom",
                                                 "timestamp": "timestamp"
                                             }

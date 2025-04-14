@@ -103,6 +103,36 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AppUserDto(user));
     }
 
+    @Operation(
+            summary = "Get user details",
+            description = """
+                    Returns currently authenticated user details
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User Details fetched successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "The request is unauthenticated",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                                "path": "/api/user",
+                                                "error": "Unauthorized",
+                                                "message": "User Details not found for the user: string",
+                                                "timestamp": "timestamp",
+                                                "status": 401
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
     @PostMapping("/user")
     public ResponseEntity<AppUserDto> getUserDetailsAfterLogin(Authentication authentication) {
         Optional<AppUser> user = userRepository.findByUsername(authentication.getName());
