@@ -218,8 +218,8 @@ public class UrlRestController {
                                             {
                                                 "path": "/api/shorten/custom",
                                                 "error": "Forbidden",
-                                                "message": "Access Denied | User 'string' does not have PREMIUM Role",
-                                                "timestamp": "timestamp",
+                                                "message": "Access Denied",
+                                                "timestamp": "2025-04-14T14:20:35.023624728",
                                                 "status": 403
                                             }
                                             """
