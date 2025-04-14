@@ -1,5 +1,6 @@
-package com.example.url_shortener.dto;
+package com.example.url_shortener.mapper;
 
+import com.example.url_shortener.dto.UrlResponse;
 import com.example.url_shortener.entity.Url;
 
 public class UrlMapper {

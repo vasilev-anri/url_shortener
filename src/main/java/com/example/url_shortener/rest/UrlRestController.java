@@ -2,10 +2,9 @@ package com.example.url_shortener.rest;
 
 import com.example.url_shortener.dto.CustomUrlRequest;
 import com.example.url_shortener.dto.ShortUrlResponse;
-import com.example.url_shortener.dto.UrlMapper;
+import com.example.url_shortener.mapper.UrlMapper;
 import com.example.url_shortener.dto.UrlResponse;
 import com.example.url_shortener.entity.Url;
-import com.example.url_shortener.exceptionhandling.ShortUrlNotFoundException;
 import com.example.url_shortener.repository.UrlRepository;
 import com.example.url_shortener.service.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
