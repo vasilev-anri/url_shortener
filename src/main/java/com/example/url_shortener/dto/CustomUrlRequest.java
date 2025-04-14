@@ -1,8 +1,19 @@
 package com.example.url_shortener.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.URL;
 
+@Schema(
+        name = "CustomShortUrlRequest",
+        description = "Request payload to create a custom short URL alias",
+        example = """
+                {
+                    "originalUrl": "https://example.com/long/longer/the-longest",
+                    "customShortUrl": "custom123"
+                }
+                """
+)
 public class CustomUrlRequest {
 
     @NotNull(message = "Original Url can not be null")

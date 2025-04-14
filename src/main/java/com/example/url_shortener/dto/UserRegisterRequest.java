@@ -1,11 +1,17 @@
 package com.example.url_shortener.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data @AllArgsConstructor
+@Schema(
+        name = "CreateUserRequest",
+        description = "Request payload for user registration"
+)
+@Data
+@AllArgsConstructor
 public class UserRegisterRequest {
 
     @NotEmpty(message = "Username can not be null or empty")

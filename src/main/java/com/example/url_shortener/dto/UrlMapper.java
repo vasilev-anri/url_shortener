@@ -6,7 +6,6 @@ public class UrlMapper {
 
     public static UrlResponse toUrlResponse(Url url) {
         UrlResponse response = new UrlResponse();
-        response.setId(url.getId());
         response.setOriginalUrl(url.getOriginalUrl());
         response.setShortUrl(url.getShortUrl());
         response.setShortUrl(url.getShortUrl());
