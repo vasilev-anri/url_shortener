@@ -2,6 +2,10 @@ package com.example.url_shortener.config;
 
 import com.example.url_shortener.exceptionhandling.CustomAccessDeniedHandler;
 import com.example.url_shortener.exceptionhandling.CustomBasicAuthenticationEntryPoint;
+import com.example.url_shortener.filter.AuthoritiesLoggingAfterFilter;
+import com.example.url_shortener.filter.AuthoritiesLoggingAtFilter;
+import com.example.url_shortener.filter.JwtClaimsLoggingAfterFilter;
+import com.example.url_shortener.filter.RequestValidationBeforeFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -21,7 +25,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 public class ProjectSecurityConfig {
@@ -39,6 +45,10 @@ public class ProjectSecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter());
         http.sessionManagement(cs -> cs.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
+        http.addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new JwtClaimsLoggingAfterFilter(), BearerTokenAuthenticationFilter.class);
         http.authorizeHttpRequests(configurer ->
                 configurer
                         .requestMatchers("/api/urls").authenticated()
